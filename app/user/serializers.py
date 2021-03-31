@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model, models
+from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
@@ -18,8 +18,8 @@ class UserSerializser(serializers.ModelSerializer):
             }
         }
 
-        def create(self, validated_data):
-            """we are overriding default create to use our
+    def create(self, validated_data):
+        """we are overriding default create to use our
             encripted password method"""
 
-            return get_user_model().objects.create_user(**validated_data)
+        return get_user_model().objects.create_user(**validated_data)
