@@ -105,4 +105,20 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Retireve the recipe for the authenticated user"""
 
-        return self.queryset.filter(user=self.request.user).order_by("-title")
+        return self.queryset.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        """Return appropriate serializer clss"""
+
+        if self.action == "retrieve":
+            return serializers.RecipeDetailSerializer
+
+        return self.serializer_class
+
+    def perform_create(self, serializer):
+        """Create a new recipe"""
+        """Modelserializer know how to create new object to our model as we
+        already defined the model here we just need to set the authenticated
+        user to perform the create function"""
+
+        serializer.save(user=self.request.user)
