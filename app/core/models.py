@@ -1,8 +1,23 @@
+import uuid
+import os
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 from django.conf import settings
 from django.db.models.deletion import CASCADE
+
+
+def reciepe_image_file_path(instance, filename):
+    """Grenerate flie path for new recipe"""
+    """Have no idea about the instance .. it has to do something with
+    the upload url maybe"""
+
+    # Here uuid genarate randome name
+    ext = filename.split(".")[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+
+    return os.path.join("uploads/recipe/", filename)
 
 
 class UserManager(BaseUserManager):
@@ -84,6 +99,10 @@ class Recipe(models.Model):
     link = models.CharField(max_length=255, blank=True)
     ingredients = models.ManyToManyField("Ingredient")
     tags = models.ManyToManyField("Tag")
+    image = models.ImageField(null=True, upload_to=reciepe_image_file_path)
+    # here we don't want to call our fucntion by () insted we are passing
+    # a reference to the fuction so it will be called every time user upload
+    # an image
 
     def __str__(self):
         return self.title
