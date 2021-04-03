@@ -72,7 +72,20 @@ class BaseRecipeAttrViewSets(viewsets.GenericViewSet,
     def get_queryset(self):
         """Return objects for the current authenticated user only"""
 
-        return self.queryset.filter(user=self.request.user).order_by("-name")
+        assigned_only = bool(
+            int(self.request.query_params.get("assigned_only"))
+        )
+        queryset = self.queryset
+        if assigned_only:
+            """By defalut we can access reverse manaytomany relationships
+            foreing element by its smaller case model name (Recipe>recipe)
+            and isnull function will filter out all elements who don't have
+            recipe element"""
+            queryset = queryset.filter(recipe__isnull=False)
+
+        return queryset.filter(
+            user=self.request.user
+        ).order_by("name")
 
     def perform_create(self, serializer):
         """Create a new object to the database"""
