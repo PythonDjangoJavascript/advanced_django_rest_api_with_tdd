@@ -105,10 +105,34 @@ class RecipeViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
 
+    def _params_to_ints(self, qs):
+        """Cnvert a list of string IDs to a list of integers"""
+
+        return [int(str_id) for str_id in qs.split(",")]
+
     def get_queryset(self):
         """Retireve the recipe for the authenticated user"""
 
-        return self.queryset.filter(user=self.request.user)
+        # it returns tags query given by url i.e tags=1,2
+        tags = self.request.query_params.get("tags")
+        # it returns ingredient query given by url
+        ingredients = self.request.query_params.get("ingredients")
+        queryset = self.queryset
+
+        # tags and/or ingredients didn't recieve any query will return None
+        if tags:
+            tag_ids = self._params_to_ints(tags)
+            """Here doube undercore __ is for filtering by the forign key id
+            as our recipe has tags foreing key and __ syntax to access this id
+            and again __ in for calling the function in that returns all
+            recipe that contains that certain ID"""
+            queryset = queryset.filter(tags__id__in=tag_ids)
+
+        if ingredients:
+            ingredient_ids = self._params_to_ints(ingredients)
+            queryset = queryset.filter(ingredients__id__in=ingredient_ids)
+
+        return queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
         """Return appropriate serializer clss"""
