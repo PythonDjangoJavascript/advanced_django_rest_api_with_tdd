@@ -8,7 +8,6 @@ from rest_framework.test import APIClient
 from core.models import Tag, Recipe
 
 from recipe.serializers import TagSerializer
-import user
 
 
 TAGS_URL = reverse("recipe:tag-list")
@@ -109,7 +108,7 @@ class PrivateTagsApiTests(TestCase):
         )
         recipe.tags.add(tag2)
 
-        res = self.client.get(TAGS_URL, {"assigned_only", 1})
+        res = self.client.get(TAGS_URL, {"assigned_only": 1})
 
         serializer1 = TagSerializer(tag1)
         serializer2 = TagSerializer(tag2)
@@ -136,6 +135,6 @@ class PrivateTagsApiTests(TestCase):
         )
         recipe2.tags.add(tag)
 
-        res = self.client.get(TAGS_URL, {"assigned_only", 1})
+        res = self.client.get(TAGS_URL, {"assigned_only": 1})
 
         self.assertEqual(len(res.data), 1)

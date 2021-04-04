@@ -73,7 +73,8 @@ class BaseRecipeAttrViewSets(viewsets.GenericViewSet,
         """Return objects for the current authenticated user only"""
 
         assigned_only = bool(
-            int(self.request.query_params.get("assigned_only"))
+            # by default assigned only is 0 because int doesn't accept None
+            int(self.request.query_params.get("assigned_only", 0))
         )
         queryset = self.queryset
         if assigned_only:
@@ -85,7 +86,7 @@ class BaseRecipeAttrViewSets(viewsets.GenericViewSet,
 
         return queryset.filter(
             user=self.request.user
-        ).order_by("name")
+        ).order_by("-name").distinct()
 
     def perform_create(self, serializer):
         """Create a new object to the database"""
