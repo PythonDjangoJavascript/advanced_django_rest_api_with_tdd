@@ -18,7 +18,7 @@ Its a practice froject from udemy course calld advanced rest api.
 * django_rest_framework
 * postgreSQL,
 * Docker
-* TraviCI
+* TravisCI
 * git
 
 ## Clone this repo:
@@ -32,11 +32,12 @@ $ git clone https://github.com/PythonDjangoJavascript/advanced_django_rest_api_w
 $ cd (enter the downloaded directory)
 $ docker build .
 $ docker-compose build
+$ docker-compose up
 $docker-compose run app sh -c "python manage.py runserver"
 ```
 
 ## License
 
-This project is released under MITlicense
+This project is released under [MITlicense](https://www.mit.edu/~amini/LICENSE.md)
 
 
